@@ -8,140 +8,71 @@ cat("\014")
 # éste sea igual a aquél en el que se encuentra el script
 # Si es tu 1ª vez con R, tendrás que instalar el paquete rstudioapi
 setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
-# Este comando puede dar error si hay acentos u otros carácteres "extraños" en 
-# la ruta. Si es así, puedes escribir directamente la ruta entrecomillada y 
-# cuidado con la dirección de las barras
-# setwd("c:/Users/Adm...")
-# O puede usar la opción del menú "Sessions->Set Working Directory->To Source File Location"
 
 # Comprobamos que está correcto
-getwd()
+#getwd()
+
+#Comentar despu�s de instalar los paquetes necesarios
+#install.packages("drat", repos="https://cran.rstudio.com")
+#drat:::addRepo("dmlc")
+#cran <- getOption("repos")
+#cran["dmlc"] <- "https://apache-mxnet.s3-accelerate.dualstack.amazonaws.com/R/CRAN/"
+#options(repos = cran)
+#install.packages("mxnet")
+
 #---------------------------------------------------------------------------
 
-# En R, no hay que reservar memoria para las variables, ni "preocuparnos" por sus tipos
-a = 2
-b = "dos"
-a = "tres"
-b = 3.4
+#Definimos el directorio donde tendremos los datasets de imagenes
+image_dir <- "C:/Users/usuario/Desktop/DEUSTO/MASTER/IA_AVANZADA/PROYECTO/train"
 
-# Si miráis código por internet, podéis encontrar la asignación así: "a <- 2" (es similar)
+#instalar paquete
+#source("https://bioconductor.org/biocLite.R")
+#biocLite("EBImage")
+#library(EBImage)
 
-# Para declarar vectores, basta con asignarlos, y basta llamar a una variable para mostrar su 
-# contenido por la consola
-vector = c(1,2,3,4,5,6)
-vector
+#Cargar foto de bici y comprobar que se visualiza correctamente
+example_bike_image <- readImage(file.path(image_dir, "bike.jpg"))
+display(example_bike_image)
 
-vector = c("uno","dos","tres")
 
-# Existen multitud de comandos para crear e inicializar vectores (y matrices)
-vector = 1:10
-vector = seq(1,10,2)
-vector = seq(10,1,-2)
-vector = runif(10,50,100)
-vector = rep(c(1,2),10)
-
-matriz = matrix(0,nrow=10,ncol=3)
-matriz
-
-# Accedemos a las componentes con corchetes
-vector[2]
-matriz[1,3]
-
-# Para las matrices, podemos acceder a toda una fila/columna
-matriz[1,]
-matriz[,1]
-
-# Y hacer operaciones múltiples
-matriz[1,] = 10
-matriz
-
-matriz[,2] = matriz[,2]+10
-matriz
-
-vector2 = vector^2
-vector2
-
-# Se pueden utilizar estructuras FOR (aunque no son recomendables, porque son más ineficientes y poco elegantes)
-# El uso de bucles "innecesarios" en las prácticas penalizará (levemente) la calificación
-for (i in 1:nrow(matriz)){
-  matriz[i,3] = matriz[i,3]+1
+width <- 28
+height <- 28
+install.packages("pbapply")
+extract_feature <- function(dir_path, width, height, is_bike = TRUE, add_label = TRUE) {
+  img_size <- width*height
+  ## List images in path
+  images_names <- list.files(dir_path)
+  if (add_label) {
+    ## Select only cats or dogs images
+    images_names <- images_names[grepl(ifelse(is_bike, "bike", "notBike"), images_names)]
+    ## Set label, cat = 0, dog = 1
+    label <- ifelse(is_bike, 0, 1)
+  }
+  print(paste("Start processing", length(images_names), "images"))
+  ## This function will resize an image, turn it into greyscale
+  feature_list <- pblapply(images_names, function(imgname) {
+    ## Read image
+    img <- readImage(file.path(dir_path, imgname))
+    ## Resize image
+    img_resized <- resize(img, w = width, h = height)
+    ## Set to grayscale
+    grayimg <- channel(img_resized, "gray")
+    ## Get the image as a matrix
+    img_matrix <- grayimg@.Data
+    ## Coerce to a vector
+    img_vector <- as.vector(t(img_matrix))
+    return(img_vector)
+  })
+  ## bind the list of vector into matrix
+  feature_matrix <- do.call(rbind, feature_list)
+  feature_matrix <- as.data.frame(feature_matrix)
+  ## Set names
+  names(feature_matrix) <- paste0("pixel", c(1:img_size))
+  if (add_label) {
+    ## Add label
+    feature_matrix <- cbind(label = label, feature_matrix)
+  }
+  return(feature_matrix)
 }
-matriz
 
-# Otra opción, elegante, eficiente, y necesaria en algunos casos es usar funciones de la familia apply
-# Podemos definir nuestra propia función
-prueba = function(x){
-  valor = x[2]^2-x[3]
-  return(valor)
-}
-matriz[,1] = apply(matriz,1,function(x) prueba(x))
-matriz
-
-# Aunque la estructura "más potente" es el data.frame, que permite tener columnas
-# de diferentes tipos
-datos = read.csv("basketball.csv")
-
-# En ella, podemos acceder a columnas completas por índice o nombre
-datos[,1]
-datos$assists_per_minute
-
-# Y crear una nueva columna que calculemos simplemente dándole un nombre
-datos$masde2metros = datos$height>200
-datos$masde2metros
-
-# Y hacer operaciones más complejas
-datos$alto = ifelse(datos$height>200,"Alto","Bajo")
-
-
-
-
-# La librería ggplot2 es la más utilizada por científicos de datos para hacer gráficas
-# Ojo: Deberéis instalar el paquete (R tiene ya más de 10.000 paquetes distintos)
-# Podéis usar el comando install.packages("ggplot2"), o descargarlo desde la interfaz de RStudio
-library(ggplot2)
-ggplot(datos,aes(x=assists_per_minute,y=time_played))+geom_point()
-
-ggplot(datos,aes(x=assists_per_minute,y=time_played,col=masde2metros))+
-  geom_point()
-
-# Y hacerlo todo lo complejo que queráis
-ggplot(datos,aes(x=assists_per_minute,y=time_played,col=masde2metros))+
-  geom_point()+
-  labs(x = "Asistencias por Minuto (min)", 
-       y="Tiempo de Juego (%)", 
-       colour = "Alto?",
-       title = "Jugadores de baloncesto",
-       subtitle = "(Asistencias/Tiempo de juego)",
-       caption = "Universidad de deusto")
-
-
-# Otro de los paquetes más utilizados es dplyr, que permite hacer operaciones, filtros y resúmenes sobre
-# tablas de datos, este paquete forma parte del paquete tidyverse, aunque puede utilizarse independientemente
-library(tidyverse)
-
-# Seleccionar columnas
-prueba = datos %>% 
-  select(height, time_played)
-
-# Seleccionar filas en base a un criterio
-prueba = datos %>% 
-  filter(height > 190)
-
-# Concatenar varias operaciones (también de otros tipos)
-prueba = datos %>% 
-  filter(height > 190) %>% 
-  select(height, time_played)
-
-# Crear/modificar columnas
-prueba = datos %>% 
-  mutate(assists_per_hour = assists_per_minute*60,
-         assists_per_match = assists_per_minute*40,
-         decada = paste0(10*floor(age/10),"'s"))
-
-# Crear resumenes...
-prueba %>% 
-  group_by(decada) %>%
-  summarise(altura = mean(height),
-            minutos = mean(time_played),
-            puntos = mean(points_per_minute),
-            asistencias = mean(assists_per_minute))
+bike_data <- extract_feature(dir_path = image_dir, width = width, height = height)
