@@ -6,7 +6,7 @@ cat("\014")
 
 # Otro punto es establecer el working directory, con este comando hacemos que 
 # éste sea igual a aquél en el que se encuentra el script
-# Si es tu 1ª vez con R, tendrás que instalar el paquete rstudioapi
+# Si es tu 1ª vez con R, tendrás que instalar el paquete rstudioapim
 setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
 
 # Comprobamos que está correcto
