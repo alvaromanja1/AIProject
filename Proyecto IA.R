@@ -1,4 +1,4 @@
-# Nombre: Iván Martín y Alvaro Manjarrés
+# Nombre: Iv?n Mart?n y Alvaro Manjarr?s
 
 # Con los siguientes dos comandos limpiamos el entorno de trabajo y la consola
 rm(list = ls())
@@ -8,12 +8,21 @@ cat("\014")
 # Ã©ste sea igual a aquÃ©l en el que se encuentra el script
 # Si es tu 1Âª vez con R, tendrÃ¡s que instalar el paquete rstudioapim
 setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
-
 # Comprobamos que estÃ¡ correcto
 #getwd()
 
-
+#Librer?as
+library(frbs)
+library(ggplot2)
 #---------------------------------------------------------------------------
 
+#leer los csv's
+drivers = read.csv("csv/drivers.csv")
+driverStandings = read.csv("csv/driverStandings.csv")
+races = read.csv("csv/races.csv")
+results = read.csv("csv/results.csv")
+circuits = read.csv("csv/circuits.csv")
 
+#combinar csv's
+driveStands = merge(drivers, driverStandings, by = "driverId")
 
