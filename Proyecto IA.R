@@ -35,16 +35,16 @@ humedadBaja = c(2, 16 , 24 , 35 , NA)
 humedadMedia = c(4,33, 45, 62, 70)
 humedadAlta = c(3,65, 78, 99, NA)
 
-varinp.mf = cbind(presionBaja,presionMedia,presionAlta,tempBaja,tempMedia,tempAlta)
+varinp.mf = cbind(tempBaja,tempMedia,tempAlta,presionBaja,presionMedia,presionAlta)
 
 num.fvalinput = matrix(c(3,3), nrow=1)
 
 
-varinput1 = c("Poca", "Algo", "Mucha")
-varinput2 = c ("Baja", "Media", "Alta")
+varinput2 = c("Poca", "Algo", "Mucha")
+varinput1 = c("Baja", "Media", "Alta")
 names.varinput = c(varinput1, varinput2)
 
-range.data = matrix(c(986, 1043, -3, 31, 0, 100), nrow = 2)
+range.data = matrix(c( -3, 31, 986, 1043, 0, 100), nrow = 2)
 
 type.defuz = "COG"
 type.tnorm = "MIN"
@@ -56,7 +56,7 @@ name = "Probabilidad de lluvia" #Le damos nombre
 
 newdata = read.csv("csv/Tiempo Madrid.csv")[,c(4,13)]
 
-colnames.var = c("Presion", "Temperatura", "Resultado")
+colnames.var = c("Temperatura", "Presion", "Resultado")
 
 probBaja = c(2,0, 20, 40, NA)#Consideramos que una app es "mala" si tiene entre 0 y 20 puntos, a partir de la cual pensamos que deja de ser tam mala, hasta llegar a la valoración de 40
 probMedia = c(4,30, 45, 55, 70) #Consideramos que una app empieza a ser "regular" a partir de los 30 puntos, hasta llegar a los 45 puntos; y empieza a dejar de ser "regular" a partir de los 55, hasta llegar a los 70 puntos
@@ -68,19 +68,18 @@ varoutput1 = c("Baja", "Media", "Alta") #Indicamos sus nombres
 
 varout.mf = cbind(probBaja,probMedia,probAlta)
 
-rule = matrix( c("Poca", "and", "Baja","->", "Alta",
-                 "Algo", "and", "Baja","->", "Media",
-                 "Mucha", "and", "Baja","->", "Media",
+rule = matrix( c("Baja", "and", "Poca","->", "Alta",
+                 "Baja", "and", "Algo","->", "Media",
+                 "Baja", "and", "Mucha","->", "Media",
                  
-                 "Poca", "and", "Media","->", "Media",
-                 "Algo", "and", "Media","->", "Media",
-                 "Mucha", "and", "Media","->", "Baja",
+                 "Media", "and", "Poca","->", "Media",
+                 "Media", "and", "Algo","->", "Media",
+                 "Media", "and", "Mucha","->", "Baja",
                  
-                 "Poca", "and", "Alta","->", "Media",
-                 "Algo", "and", "Alta","->", "Baja",
-                 "Mucha", "and", "Alta","->", "Baja"
-                 
-), nrow = 9, byrow = TRUE)
+                 "Alta", "and", "Poca","->", "Media",
+                 "Alta", "and", "Algo","->", "Baja",
+                 "Alta", "and", "Mucha","->", "Baja"
+                 ), nrow = 9, byrow = TRUE)
 
 sistema = frbs.gen(range.data, num.fvalinput, names.varinput,
                    num.fvaloutput, varout.mf, varoutput1, rule,
