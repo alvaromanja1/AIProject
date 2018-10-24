@@ -17,22 +17,11 @@ library(ggplot2)
 #---------------------------------------------------------------------------
 
 #leer los csv's
-drivers = read.csv("csv/drivers.csv")
-driverStandings = read.csv("csv/driverStandings.csv")
-races = read.csv("csv/races.csv")
-results = read.csv("csv/results.csv")
-
-drivers = drivers[, !(colnames(drivers) %in% c("number","code", "forename", "surname", "dob", "nationality", "url"))]
-driverStandings = driverStandings[, !(colnames(driverStandings) %in% c("positionText","driverStandingsId"))]
-races = races[, !(colnames(races) %in% c("round","date", "time", "url"))]
-results = results[, !(colnames(results) %in% c("round","date", "time", "url"))]
-
-#combinar csv's
-driveStands = merge(drivers, driverStandings, by = "driverId")
-driverResults = merge(driveStands, races, by = "raceId")
+weather = read.csv("csv/Tiempo Madrid.csv")
 
 #elimina las filas cuyo año sea menor que 2010 debido a que ese año cambió el sistema de puntuación
 #y el resultado no sería homogéneo
-driverResults = driverResults[driverResults$year > "2009",]
+weather$id = seq.int(nrow(weather))
+weather = weather[weather$id > "4622",]
 
 
