@@ -11,14 +11,22 @@ setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
 # Comprobamos que está correcto
 #getwd()
 
+#Instalar librerias
+#install.packages("rlist")
+#install.packages("SmarterPoland")
+
 #Librerías
 library(frbs)
 library(ggplot2)
+library(scales)
+library(SmarterPoland)
+library(htmltools)
+library(rlist)
 #---------------------------------------------------------------------------
 
 #leer los csv's
-
 weather = read.csv("csv/Tiempo Madrid.csv")
+weather = read.csv("csv/Tiempo Madrid.csv")[,c(1,2,4,10,13,21,23)]
 #weather$id = seq.int(nrow(weather))
 #weather = weather[weather$id > 4621,]
 #write.csv(weather, file = "csv/Tiempo Madrid.csv")
@@ -48,7 +56,7 @@ varinput3 = c("Reducida","Intermedia","Grande")
 names.varinput = c(varinput1, varinput3,varinput2)
 
 range.data = matrix(c( -3, 31, 16, 99, 986, 1043, 0, 100), nrow = 2)
-
+#Temp minima historia bilbao: -6, Max: 41
 type.defuz = "COG"
 type.tnorm = "MIN"
 type.snorm = "MAX"
@@ -125,10 +133,20 @@ newdata$id = seq.int(nrow(weather))
 
 result = merge(weather, newdata, by.x = 'id', by.y = 'id')
 
+result = result[,c(1,2,3,4,5,6,7,11)]
 
-#library("httr")
-#url = "https://api.darksky.net/forecast/0f2b65e77aaedc65730f517a06076584/43.257,-2.92344"
+#A partir de aquí, lo de la predicción actual
 
-#test = GET(url)
+forecast = getWeatherForecast("", city='Bilbao')
 
-#resp <- make_req(straighten(curlExample))
+realTemp = forecast[[2]]
+
+realTemp = realTemp[,c(1,2,4,5,6,10,11,19)]
+
+realTemp[6] = realTemp[6]*100
+
+realTemp = realTemp[c(8,6,7)]
+
+res = predict(sistema, realTemp)$predicted.val 
+
+realTemp$probabilidad = res
