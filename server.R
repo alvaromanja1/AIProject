@@ -135,9 +135,11 @@ result = merge(weather, newdata, by.x = 'id', by.y = 'id')
 
 result = result[,c(1,2,3,4,5,6,7,11)]
 
+
+
 #A partir de aquí, lo de la predicción actual
 
-forecast = getWeatherForecast("", city='Bilbao')
+forecast = getWeatherForecast("188cbc6cc1f993a4f2e4c1b7cce0ff65", city='Bilbao')
 
 realTemp = forecast[[2]]
 
@@ -150,3 +152,13 @@ realTemp = realTemp[c(8,6,7)]
 res = predict(sistema, realTemp)$predicted.val 
 
 realTemp$probabilidad = res
+
+#A partir de aquí sacamos la predicción de los siguientes días. Con ello lo volcaremos a la interfaz
+
+dailyTemp = forecast[[3]]
+
+dailyTemp = dailyTemp[,c(5,11,12)]
+
+res = predict(sistema, dailyTemp)$predicted.val 
+
+dailyTemp$probabilidad = res
