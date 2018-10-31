@@ -22,13 +22,14 @@ library(scales)
 library(SmarterPoland)
 library(htmltools)
 library(rlist)
+library(shiny)
 
 file = 'Apikey.txt'
 APIKEY = readChar(file, file.info(file)$size)
 
 #---------------------------------------------------------------------------
 
-#leer los csv's
+#leer los csv's  
 weather = read.csv("csv/Tiempo Madrid.csv")[,c(1,2,4,10,13,21,23)]
 #weather$id = seq.int(nrow(weather))
 #weather = weather[weather$id > 4621,]
@@ -139,39 +140,84 @@ result = merge(weather, newdata, by.x = 'id', by.y = 'id')
 result = result[,c(1,2,3,4,5,6,7,11)]
 
 
-
+#Servidor de shiny mediante el cual pasaremos la info a ui.r y lo visualizamos
 #A partir de aquí, lo de la predicción actual
-names(unlist(APIKEY))
-forecast = getWeatherForecast(APIKEY, city='Bilbao')
+shinyServer(function(input, output) {
+  names(unlist(APIKEY))
+  location = 'Bilbao'
+  
+  output$location <- renderText({
+    location
+  })
+  
+  forecast = getWeatherForecast(APIKEY, city=location)
+  
+  realTemp = forecast[[1]]
+  
+  realTemp$icon = NULL
+  realTemp$apparentTemperature = NULL
+  realTemp$temperature = NULL
+  realTemp$dewPoint = NULL
+  realTemp$windSpeed = NULL
+  realTemp$windBearing = NULL
+  realTemp$cloudCover = NULL
+  realTemp$uvIndex = NULL
+  realTemp$visibility = NULL
+  realTemp$ozone = NULL
+  realTemp$apparentTemperatureCelsius = NULL
+  
+  realTemp2 = realTemp[,c(9,6,7)]
+  
+  realTemp2$humidity = realTemp$humidity * 100
+  
+  res = predict(sistema, realTemp2)$predicted.val 
+  
+  output$probabilidadLluvia <- renderText({
+    res
+  })
+  
+  output$image2 <- renderImage({
+  if(res >=0 && res < 25){ 
+    return(list(
+      src = "images/sol.png",
+      contentType = "image/png",
+      alt = "Face"
+    ))
+  }else if (res >=25 && res < 45){
+    return(list(
+      src = "images/solNubes.png",
+      contentType = "image/png",
+      alt = "Face"
+    ))
+    
+  }else if (res >=45 && res < 65){
+    return(list(
+      src = "images/nubes.png",
+      contentType = "image/png",
+      alt = "Face"
+    ))
+    
+  }else if(res >=65 && res <= 100){
+    return(list(
+      src = "images/lluvia.png",
+      contentType = "image/png",
+      alt = "Face"
+    ))
+    
+  }
+  }, deleteFile = FALSE)
+  
+  realTemp2$probabilidad = res
 
-realTemp = forecast[[1]]
-
-realTemp$icon = NULL
-realTemp$apparentTemperature = NULL
-realTemp$temperature = NULL
-realTemp$dewPoint = NULL
-realTemp$windSpeed = NULL
-realTemp$windBearing = NULL
-realTemp$cloudCover = NULL
-realTemp$uvIndex = NULL
-realTemp$visibility = NULL
-realTemp$ozone = NULL
-realTemp$apparentTemperatureCelsius = NULL
-
-realTemp2 = realTemp[,c(9,6,7)]
-
-realTemp2$humidity = realTemp$humidity * 100
-
-res = predict(sistema, realTemp2)$predicted.val 
-
-realTemp2$probabilidad = res
+})
 
 #A partir de aquí sacamos la predicción de los siguientes días. Con ello lo volcaremos a la interfaz
+#No se podría hacer ya que falta la presión
+#dailyTemp = forecast[[3]]
 
-dailyTemp = forecast[[3]]
+#dailyTemp = dailyTemp[,c(5,11,12)]#12 humedad (*100)
 
-dailyTemp = dailyTemp[,c(5,11,12)]#12 humedad (*100)
+#res = predict(sistema, dailyTemp)$predicted.val 
 
-res = predict(sistema, dailyTemp)$predicted.val 
+#dailyTemp$probabilidad = res
 
-dailyTemp$probabilidad = res

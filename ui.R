@@ -28,22 +28,20 @@ setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
 library(shiny)
 #---------------------------------------------------------------------------
 
-shinyUI(pageWithSidebar(
+shinyUI(fluidPage(
+  
+  includeCSS("styles.css"),
   
   # Application title
   headerPanel("Weather forecast"),
   # Sidebar with a slider input for number of observations
-  #sidebarPanel(
-   # sliderInput("obs", 
-    #            "Number of observations:", 
-     #           min = 1,
-    #            max = 1000, 
-   #             value = 500)
-  #),
+ 
   
   # Show a plot of the generated distribution
-  #mainPanel(
-  #  plotOutput("distPlot")
-  #)
+  mainPanel(
+    h3(textOutput("location")),
+    h3(textOutput("probabilidadLluvia")),
+    imageOutput("image2")
+    )
   
 ))
