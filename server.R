@@ -22,6 +22,10 @@ library(scales)
 library(SmarterPoland)
 library(htmltools)
 library(rlist)
+
+file = 'Apikey.txt'
+APIKEY = readChar(file, file.info(file)$size)
+
 #---------------------------------------------------------------------------
 
 #leer los csv's
@@ -137,8 +141,8 @@ result = result[,c(1,2,3,4,5,6,7,11)]
 
 
 #A partir de aquí, lo de la predicción actual
-
-forecast = getWeatherForecast("", city='Bilbao')
+names(unlist(APIKEY))
+forecast = getWeatherForecast(APIKEY, city='Bilbao')
 
 realTemp = forecast[[1]]
 
