@@ -25,7 +25,6 @@ library(rlist)
 #---------------------------------------------------------------------------
 
 #leer los csv's
-weather = read.csv("csv/Tiempo Madrid.csv")
 weather = read.csv("csv/Tiempo Madrid.csv")[,c(1,2,4,10,13,21,23)]
 #weather$id = seq.int(nrow(weather))
 #weather = weather[weather$id > 4621,]
@@ -139,25 +138,35 @@ result = result[,c(1,2,3,4,5,6,7,11)]
 
 #A partir de aquí, lo de la predicción actual
 
-forecast = getWeatherForecast("188cbc6cc1f993a4f2e4c1b7cce0ff65", city='Bilbao')
+forecast = getWeatherForecast("", city='Bilbao')
 
-realTemp = forecast[[2]]
+realTemp = forecast[[1]]
 
-realTemp = realTemp[,c(1,2,4,5,6,10,11,19)]
+realTemp$icon = NULL
+realTemp$apparentTemperature = NULL
+realTemp$temperature = NULL
+realTemp$dewPoint = NULL
+realTemp$windSpeed = NULL
+realTemp$windBearing = NULL
+realTemp$cloudCover = NULL
+realTemp$uvIndex = NULL
+realTemp$visibility = NULL
+realTemp$ozone = NULL
+realTemp$apparentTemperatureCelsius = NULL
 
-realTemp[6] = realTemp[6]*100
+realTemp2 = realTemp[,c(9,6,7)]
 
-realTemp = realTemp[c(8,6,7)]
+realTemp2$humidity = realTemp$humidity * 100
 
-res = predict(sistema, realTemp)$predicted.val 
+res = predict(sistema, realTemp2)$predicted.val 
 
-realTemp$probabilidad = res
+realTemp2$probabilidad = res
 
 #A partir de aquí sacamos la predicción de los siguientes días. Con ello lo volcaremos a la interfaz
 
 dailyTemp = forecast[[3]]
 
-dailyTemp = dailyTemp[,c(5,11,12)]
+dailyTemp = dailyTemp[,c(5,11,12)]#12 humedad (*100)
 
 res = predict(sistema, dailyTemp)$predicted.val 
 
