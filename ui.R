@@ -26,22 +26,40 @@ setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
 #library(htmltools)
 #library(rlist)
 library(shiny)
+library(shinydashboard)
 #---------------------------------------------------------------------------
 
-shinyUI(fluidPage(
+sidebar <- dashboardSidebar(
   
   includeCSS("styles.css"),
   
-  # Application title
-  headerPanel("Weather forecast"),
-  # Sidebar with a slider input for number of observations
- 
+  sidebarMenu(
+    menuItem("Weather Forecast", tabName = "today", icon = icon("dashboard"),badgeLabel = "new", badgeColor = "green"))
   
-  # Show a plot of the generated distribution
-  mainPanel(
-    h3(textOutput("location")),
-    h3(textOutput("probabilidadLluvia")),
-    imageOutput("image2")
+)
+
+
+body <- dashboardBody(
+  tabItems(
+    tabItem(tabName = "today",
+            h1(textOutput("location")),
+            h3("Today's forecast"),
+            imageOutput("image1"),
+            h3("Tomorrow's forecast"),
+            imageOutput("image2"),
+            h3("The day after tomorrow forecast"),
+            imageOutput("image3")
+            #)
+            #))
     )
-  
-))
+  )
+)
+
+# Put them together into a dashboardPage
+dashboardPage(
+  dashboardHeader(title = "Weather forecast App"),
+  sidebar,
+  body
+)
+
+

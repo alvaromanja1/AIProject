@@ -187,6 +187,12 @@ shinyServer(function(input, output) {
   
   res = predict(sistema, realTemp2)$predicted.val 
   
+  #CurrentprobabilityText = paste(res, "% probability of precipitations.", sep=" ")
+  
+  #output$location <- renderText({
+   # res 
+  #})
+  
   output$image1 <- renderImage({
     if(res >=0 && res < 25){ 
       return(list(
@@ -240,6 +246,12 @@ shinyServer(function(input, output) {
   
   Tomorrowres = predict(sistema, tomorrowTemp)$predicted.val 
   
+  #TomorrowprobabilityText = paste(Tomorrowres, "% probability of precipitations.", sep=" ")
+  
+  #output$location <- renderText({
+   # Tomorrowres 
+  #})
+  
   tomorrowTemp$probabilidad = Tomorrowres
   
   output$image2 <- renderImage({
@@ -291,6 +303,12 @@ shinyServer(function(input, output) {
   day3Temp = day3Temp[,c("temperature", "humidity","pressure")]
   
   day3res = predict(sistema, day3Temp)$predicted.val 
+  
+  #DayAfterTomorrowprobabilityText = paste(day3res, "% probability of precipitations.", sep=" ")
+  
+  #output$location <- renderText({
+  #  day3res 
+  #})
   
   day3Temp$probabilidad = day3res
   
