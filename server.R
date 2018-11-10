@@ -33,6 +33,7 @@ APIKEY = readChar(file, file.info(file)$size)
 
 #leer los csv's  
 weather = read.csv("csv/Weather Bilbao.csv",check.names=FALSE)
+weather <- subset(weather, weather$Id <= 15361) 
 #colnames(weather)[1] <- "id2"
 #weather$id2 = NULL
 #weather$id = NULL
@@ -76,7 +77,7 @@ type.model = "MAMDANI" #Indicamos el tipo de modelo que vamos a usar
 
 name = "Probabilidad de lluvia" #Le damos nombre
 
-newdata = read.csv("csv/Weather Bilbao.csv")[,c("Temperature", "Humidity","Pressure")]
+newdata = weather[,c("Temperature", "Humidity","Pressure")]
 
 colnames.var = c("Temperatura", "Humedad","Presion", "Resultado")
 
