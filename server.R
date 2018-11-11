@@ -187,12 +187,30 @@ shinyServer(function(input, output) {
   realTemp2$humidity = realTemp$humidity * 100
   
   res = predict(sistema, realTemp2)$predicted.val 
+  # Redondeamos el resultado de la prediccion, temperatura y humedad
+  res = round(res,digits=0)
+  realTemp2$humidity = round(realTemp2$humidity,digits=0)
+  realTemp2$temperatureCelsius = round(realTemp2$temperatureCelsius,digits=0)
   
-  #CurrentprobabilityText = paste(res, "% probability of precipitations.", sep=" ")
+  #Indicamos los textos que queremos volcar a la interfaz
+  Currentprobability = paste("Precipitations:",res, sep=" ")
+  Currentprobability = paste(Currentprobability,"%", sep="")
   
-  #output$location <- renderText({
-   # res 
-  #})
+  CurrentTemperature = paste("Temperature:",realTemp2$temperatureCelsius, sep=" ")
+  CurrentTemperature = paste(CurrentTemperature,"º", sep="")
+  
+  CurrentHumidity = paste("Humidity:",realTemp2$humidity, sep=" ")
+  CurrentHumidity = paste(CurrentHumidity,"%", sep="")
+  
+  output$res <- renderText({
+    Currentprobability
+  })
+  output$currentTemp <- renderText({
+    CurrentTemperature
+  })
+  output$currentHum <- renderText({
+    CurrentHumidity
+  })
   
   output$image1 <- renderImage({
     if(res >=0 && res < 25){ 
@@ -227,9 +245,7 @@ shinyServer(function(input, output) {
   
   realTemp2$probabilidad = res
   
-  
   #A partir de aquí sacamos la predicción de los siguientes días. Con ello lo volcaremos a la interfaz
-  
   # Dia 2
   dailyForecast = get_forecast_for(lat,long, tomorrowDate)
   day2 = dailyForecast[[2]]
@@ -246,12 +262,35 @@ shinyServer(function(input, output) {
   tomorrowTemp = tomorrowTemp[,c("temperature", "humidity","pressure")]
   
   Tomorrowres = predict(sistema, tomorrowTemp)$predicted.val 
+
+  Tomorrowres = round(Tomorrowres,digits=0)
+  tomorrowTemp$humidity = round(tomorrowTemp$humidity,digits=0)
+  tomorrowTemp$temperature = round(tomorrowTemp$temperature,digits=0)
   
-  #TomorrowprobabilityText = paste(Tomorrowres, "% probability of precipitations.", sep=" ")
+  #Indicamos los textos que queremos volcar a la interfaz
+
+  Tomorrowprobability = paste("Precipitations:",Tomorrowres, sep=" ")
+  Tomorrowprobability = paste(Tomorrowprobability,"%", sep="")
   
-  #output$location <- renderText({
-   # Tomorrowres 
-  #})
+  TomorrowTemperature = paste("Temperature:",tomorrowTemp$temperature, sep=" ")
+  TomorrowTemperature = paste(TomorrowTemperature,"º", sep="")
+  
+  TomorrowHumidity = paste("Humidity:",tomorrowTemp$humidity, sep=" ")
+  TomorrowHumidity = paste(TomorrowHumidity,"%", sep="")
+  
+  output$tomorrowRes <- renderText({
+    Tomorrowprobability
+  })
+  output$tomorrowTemp <- renderText({
+    TomorrowTemperature
+  })
+  output$tomorrowHum <- renderText({
+    TomorrowHumidity
+  })
+  
+  output$tomorrowres <- renderText({
+    Tomorrowres 
+  })
   
   tomorrowTemp$probabilidad = Tomorrowres
   
@@ -307,9 +346,34 @@ shinyServer(function(input, output) {
   
   #DayAfterTomorrowprobabilityText = paste(day3res, "% probability of precipitations.", sep=" ")
   
-  #output$location <- renderText({
-  #  day3res 
-  #})
+  day3res = round(day3res,digits=0)
+  day3Temp$humidity = round(day3Temp$humidity,digits=0)
+  day3Temp$temperature = round(day3Temp$temperature,digits=0)
+  
+  #Indicamos los textos que queremos volcar a la interfaz
+  
+  day3probability = paste("Precipitations:",day3res, sep=" ")
+  day3probability = paste(day3probability,"%", sep="")
+  
+  day3Temperature = paste("Temperature:",day3Temp$temperature, sep=" ")
+  day3Temperature = paste(day3Temperature,"º", sep="")
+  
+  day3Humidity = paste("Humidity:",day3Temp$humidity, sep=" ")
+  day3Humidity = paste(day3Humidity,"%", sep="")
+  
+  output$day3Res <- renderText({
+    day3probability
+  })
+  output$day3Temp <- renderText({
+    day3Temperature
+  })
+  output$day3Hum <- renderText({
+    day3Humidity
+  })
+  
+  output$location <- renderText({
+    day3res 
+  })
   
   day3Temp$probabilidad = day3res
   
@@ -343,5 +407,4 @@ shinyServer(function(input, output) {
       
     }
   }, deleteFile = FALSE)
-  
 })

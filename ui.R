@@ -43,11 +43,22 @@ body <- dashboardBody(
   tabItems(
     tabItem(tabName = "today",
             h1(textOutput("location")),
-            h3("Today's forecast"),
+            h2("Current forecast"),
+            h5(textOutput("res")),
+            h5(textOutput("currentTemp")),
+            h5(textOutput("currentHum")),
             imageOutput("image1"),
-            h3("Tomorrow's forecast"),
+            #Día 2
+            h2("Tomorrow's forecast"),
+            h5(textOutput("tomorrowRes")),
+            h5(textOutput("tomorrowTemp")),
+            h5(textOutput("tomorrowHum")),
             imageOutput("image2"),
-            h3("The day after tomorrow forecast"),
+            #Día 3
+            h2("The day after tomorrow forecast"),
+            h5(textOutput("day3Res")),
+            h5(textOutput("day3Temp")),
+            h5(textOutput("day3Hum")),
             imageOutput("image3")
             #)
             #))
