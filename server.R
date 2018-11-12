@@ -240,6 +240,13 @@ shinyServer(function(input, output) {
         alt = "Face"
       ))
       
+    }else if(realTemp2$temperatureCelsius < 0){
+      return(list(
+        src = "images/nieve.png",
+        contentType = "image/png",
+        alt = "Face"
+      ))
+      
     }
   }, deleteFile = FALSE)
   
@@ -322,6 +329,13 @@ shinyServer(function(input, output) {
         alt = "Face"
       ))
       
+    }else if(tomorrowTemp$temperature < 0){
+      return(list(
+        src = "images/nieve.png",
+        contentType = "image/png",
+        alt = "Face"
+      ))
+      
     }
   }, deleteFile = FALSE)
   
@@ -371,7 +385,7 @@ shinyServer(function(input, output) {
     day3Humidity
   })
   
-  output$location <- renderText({
+  output$day3res <- renderText({
     day3res 
   })
   
@@ -401,6 +415,13 @@ shinyServer(function(input, output) {
     }else if(day3res >=65 && day3res <= 100){
       return(list(
         src = "images/lluvia.png",
+        contentType = "image/png",
+        alt = "Face"
+      ))
+      
+    }else if(day3Temp$temperature < 0){
+      return(list(
+        src = "images/nieve.png",
         contentType = "image/png",
         alt = "Face"
       ))
