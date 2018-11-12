@@ -33,10 +33,10 @@ APIKEY = readChar(file, file.info(file)$size)
 
 #leer los csv's  
 weather = read.csv("csv/Weather Bilbao.csv",check.names=FALSE)
-weather <- subset(weather, weather$Id <= 15361) 
+#weather <- subset(weather, weather$Id <= 15361) 
 #colnames(weather)[1] <- "id2"
 #weather$id2 = NULL
-#weather$id = NULL
+#weather$Id = NULL
 #weather$Id = NULL
 #weather$Pressure = round(weather$Pressure)
 #weather$id = seq.int(nrow(weather))
@@ -146,7 +146,7 @@ newdata$id = seq.int(nrow(weather))
 
 result = merge(weather, newdata, by.x = 'Id', by.y = 'id')
 
-result = result[,c(1,2,3,4,5,6,7,8,12)]
+result = result[,c(1,2,3,4,5,6,12)]
 
 
 #Servidor de shiny mediante el cual pasaremos la info a ui.r y lo visualizamos
