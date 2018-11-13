@@ -47,23 +47,26 @@ weather = read.csv("csv/Weather Bilbao.csv",check.names=FALSE)
 presionBaja = c(2,972, 1002, 1011, NA) #Aquí se ha decidido empezar por 0, ya que es el mínimo valor, luego que a partir de 1.25 empieze a dejar de ser una aplicación con rating "bajo", para que así, poco antes de la mitad deje de ser una aplicación con rating "bajo"
 presionMedia = c(4, 1009, 1014, 1018 , 1020)#Aquí empezamos por 1.75 para que haya más margen hasta el 2.5 (que sería la mitad exacta), luego a partir de 3.25 consideramos que empieza a dejar de ser una app "normal", hasta llegar a 4
 presionAlta = c(3,1018, 1026, 1037, NA)#Por último, consideramos que una app empieza a ser el rating "alto" a partir de 3.5, hasta 4.5, donde de ahí en adelante (hasta 5), se puede considerar una App con rating "alto"
+presionAny = c(4,972,972,1037,1037)
 
 tempBaja = c(2, -3 , 8 , 14 , NA) #Aquí empezamos por 9, ya que es el mínimo, empezamos a reducir su pertenencia a partir de 16, y consideramos que dejan de ser "pocos" los dispositivos soportados a partur de 25
-tempMedia = c(4,12, 16, 20, 24) #Aquí empezamos a considerar como "algunos" las apps con valor de 23, hasta 35, donde empeiezan ya a ser miembros de "pleno derecho" al conjunto (se hace así ya que hay grandes saltos entre dispositivos conectados). Por último, se considera que a partir de 37, empiezan a estar menos en el medio, hasta llegar a 40 
+tempMedia = c(4,10, 14, 18, 24) #Aquí empezamos a considerar como "algunos" las apps con valor de 23, hasta 35, donde empeiezan ya a ser miembros de "pleno derecho" al conjunto (se hace así ya que hay grandes saltos entre dispositivos conectados). Por último, se considera que a partir de 37, empiezan a estar menos en el medio, hasta llegar a 40 
 tempAlta = c(3,20, 27, 39, NA)
+tempAny = c(4,-3,-3,39,39)
 
 humedadBaja = c(2, 21 , 40 , 52 , NA)
 humedadMedia = c(4,47, 61, 71, 80)
 humedadAlta = c(3,77, 93, 100, NA)
+humedadAny = c(4,21,21,100,100)
 
-varinp.mf = cbind(tempBaja,tempMedia,tempAlta,humedadBaja,humedadMedia,humedadAlta,presionBaja,presionMedia,presionAlta)
+varinp.mf = cbind(tempBaja,tempMedia,tempAlta,tempAny,humedadBaja,humedadMedia,humedadAlta,humedadAny,presionBaja,presionMedia,presionAlta,presionAny)
 
-num.fvalinput = matrix(c(3,3,3), nrow=1)
+num.fvalinput = matrix(c(4,4,4), nrow=1)
 
 
-varinput1 = c("Baja", "Media", "Alta")
-varinput2 = c("Reducida","Intermedia","Grande")
-varinput3 = c("Poca", "Algo", "Mucha")
+varinput1 = c("Baja", "Media", "Alta","Any")
+varinput2 = c("Reducida","Intermedia","Grande","Any")
+varinput3 = c("Poca", "Algo", "Mucha","Any")
 
 names.varinput = c(varinput1, varinput2,varinput3)
 
@@ -92,43 +95,28 @@ varoutput1 = c("Baja", "Media", "Alta") #Indicamos sus nombres
 varout.mf = cbind(probBaja,probMedia,probAlta)
 #Temperatura: -> Baja, Media, Alta
 #Humedad: -> Reducida, Intermedia, Grande
-#Humedad: -> Poca, Algo, Mucha
-rule = matrix( c("Baja", "and", "Grande" , "and" , "Poca","->", "Alta",
-                 "Baja", "and","Grande" , "and" , "Algo","->", "Alta",
-                 "Baja", "and","Grande" , "and" , "Mucha","->", "Alta",
-                 
-                 "Baja", "and","Intermedia" , "and" , "Poca","->", "Alta",
-                 "Baja", "and","Intermedia" , "and" , "Algo","->", "Alta",
+#presion: -> Poca, Algo, Mucha
+
+rule = matrix( c("Baja", "and", "Any" , "and" , "Any","->", "Alta",
+                 "Baja", "and","Grande" , "and" , "Mucha","->", "Media",
                  "Baja", "and","Intermedia", "and"  , "Mucha","->", "Media",
-                 
-                 "Baja", "and","Reducida" , "and" , "Poca","->", "Alta",
                  "Baja", "and","Reducida" , "and" , "Algo","->", "Media",
                  "Baja", "and","Reducida", "and"  , "Mucha","->", "Media",
                  
-                 "Media", "and","Grande" , "and" , "Poca","->", "Alta",
-                 "Media", "and","Grande" , "and" , "Algo","->", "Alta",
-                 "Media", "and","Grande" , "and" , "Mucha","->", "Media",
+                 "Media", "and","Any" , "and" , "Any","->", "Media",
+                 "Media", "and","Grande" , "and" , "Mucha","->", "Baja",
+                 "Media", "and","Intermedia" , "and" , "Mucha","->", "Baja",
+                 "Media", "and","Intermedia" , "and" , "Algo","->", "Baja",
+                 "Media", "and","Reducida" , "and" , "Any","->", "Baja",
                  
-                 "Media", "and","Intermedia", "and"  , "Poca","->", "Alta",
-                 "Media", "and","Intermedia" , "and" , "Algo","->", "Media",
-                 "Media", "and","Intermedia" , "and" , "Mucha","->", "Media",
                  
-                 "Media", "and","Reducida"  , "and", "Poca","->", "Media",
-                 "Media", "and","Reducida" , "and" , "Algo","->", "Media",
-                 "Media", "and","Reducida" , "and" , "Mucha","->", "Baja",
-                 
+                 "Alta", "and","Any", "and"  , "Any","->", "Baja",
                  "Alta", "and","Grande", "and"  , "Poca","->", "Media",
-                 "Alta", "and","Grande", "and"  , "Algo","->", "Media",
-                 "Alta", "and","Grande" , "and" , "Mucha","->", "Baja",
+                 "Alta", "and","Intermedia" , "and" , "Poca","->", "Media"
                  
-                 "Alta", "and","Intermedia" , "and" , "Poca","->", "Media",
-                 "Alta", "and","Intermedia" , "and" , "Algo","->", "Baja",
-                 "Alta", "and","Intermedia" , "and" , "Mucha","->", "Baja",
                  
-                 "Alta", "and","Reducida" , "and" , "Poca","->", "Baja",
-                 "Alta", "and","Reducida" , "and" , "Algo","->", "Baja",
-                 "Alta", "and","Reducida", "and"  , "Mucha","->", "Baja"
-), nrow = 27, byrow = TRUE)
+               
+), nrow = 13, byrow = TRUE)
 
 sistema = frbs.gen(range.data, num.fvalinput, names.varinput,
                    num.fvaloutput, varout.mf, varoutput1, rule,
@@ -419,7 +407,7 @@ shinyServer(function(input, output) {
         alt = "Face"
       ))
       
-    }else if(day3Temp$temperature < 0){
+    }else if(day3Temp$temperature < -2){
       return(list(
         src = "images/nieve.png",
         contentType = "image/png",

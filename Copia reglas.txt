@@ -1,0 +1,73 @@
+--------------------------Reglas viejas------------------------------------------------------------
+"Baja", "and", "Grande" , "and" , "Poca","->", "Alta",
+                 "Baja", "and","Grande" , "and" , "Algo","->", "Alta",
+                 "Baja", "and","Grande" , "and" , "Mucha","->", "Alta",
+                 
+                 "Baja", "and","Intermedia" , "and" , "Poca","->", "Alta",
+                 "Baja", "and","Intermedia" , "and" , "Algo","->", "Alta",
+                 "Baja", "and","Intermedia", "and"  , "Mucha","->", "Media",
+                 
+                 "Baja", "and","Reducida" , "and" , "Poca","->", "Alta",
+                 "Baja", "and","Reducida" , "and" , "Algo","->", "Media",
+                 "Baja", "and","Reducida", "and"  , "Mucha","->", "Media",
+                 
+                 "Media", "and","Grande" , "and" , "Poca","->", "Alta",
+                 "Media", "and","Grande" , "and" , "Algo","->", "Alta",
+                 "Media", "and","Grande" , "and" , "Mucha","->", "Media",
+                 
+                 "Media", "and","Intermedia", "and"  , "Poca","->", "Alta",
+                 "Media", "and","Intermedia" , "and" , "Algo","->", "Media",
+                 "Media", "and","Intermedia" , "and" , "Mucha","->", "Media",
+                 
+                 "Media", "and","Reducida"  , "and", "Poca","->", "Media",
+                 "Media", "and","Reducida" , "and" , "Algo","->", "Media",
+                 "Media", "and","Reducida" , "and" , "Mucha","->", "Baja",
+                 
+                 "Alta", "and","Grande", "and"  , "Poca","->", "Media",
+                 "Alta", "and","Grande", "and"  , "Algo","->", "Media",
+                 "Alta", "and","Grande" , "and" , "Mucha","->", "Baja",
+                 
+                 "Alta", "and","Intermedia" , "and" , "Poca","->", "Media",
+                 "Alta", "and","Intermedia" , "and" , "Algo","->", "Baja",
+                 "Alta", "and","Intermedia" , "and" , "Mucha","->", "Baja",
+                 
+                 "Alta", "and","Reducida" , "and" , "Poca","->", "Baja",
+                 "Alta", "and","Reducida" , "and" , "Algo","->", "Baja",
+                 "Alta", "and","Reducida", "and"  , "Mucha","->", "Baja"
+--------------------------Reglas nuevas------------------------------------------------------------
+"Baja", "and", "Grande" , "and" , "Poca","->", "Alta",
+                 "Baja", "and","Grande" , "and" , "Algo","->", "Alta",
+                 "Baja", "and","Grande" , "and" , "Mucha","->", "Media",
+                 
+                 "Baja", "and","Intermedia" , "and" , "Poca","->", "Alta",
+                 "Baja", "and","Intermedia" , "and" , "Algo","->", "Alta",
+                 "Baja", "and","Intermedia", "and"  , "Mucha","->", "Media",
+                 
+                 "Baja", "and","Reducida" , "and" , "Poca","->", "Alta",
+                 "Baja", "and","Reducida" , "and" , "Algo","->", "Media",
+                 "Baja", "and","Reducida", "and"  , "Mucha","->", "Media",
+                 
+                 "Media", "and","Grande" , "and" , "Poca","->", "Media",
+                 "Media", "and","Grande" , "and" , "Algo","->", "Media",
+                 "Media", "and","Grande" , "and" , "Mucha","->", "Baja",
+                 
+                 "Media", "and","Intermedia", "and"  , "Poca","->", "Media",
+                 "Media", "and","Intermedia" , "and" , "Algo","->", "Media",
+                 "Media", "and","Intermedia" , "and" , "Mucha","->", "Baja",
+                 
+                 "Media", "and","Reducida"  , "and", "Poca","->", "Media",
+                 "Media", "and","Reducida" , "and" , "Algo","->", "Baja",
+                 "Media", "and","Reducida" , "and" , "Mucha","->", "Baja",
+                 
+                 "Alta", "and","Grande", "and"  , "Poca","->", "Media",
+                 "Alta", "and","Grande", "and"  , "Algo","->", "Baja",
+                 "Alta", "and","Grande" , "and" , "Mucha","->", "Baja",
+                 
+                 "Alta", "and","Intermedia" , "and" , "Poca","->", "Media",
+                 "Alta", "and","Intermedia" , "and" , "Algo","->", "Baja",
+                 "Alta", "and","Intermedia" , "and" , "Mucha","->", "Baja",
+                 
+                 "Alta", "and","Reducida" , "and" , "Poca","->", "Baja",
+                 "Alta", "and","Reducida" , "and" , "Algo","->", "Baja",
+                 "Alta", "and","Reducida", "and"  , "Mucha","->", "Baja"
+               
