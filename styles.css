@@ -4,6 +4,26 @@ h1 {
   text-align: center;
 }
 
+h2 {
+  text-align: center;
+}
+
+h5 {
+  text-align: center;
+}
+
 body {
   background-color: #87CEFA;
+}
+
+#image1 {
+  text-align: center;
+}
+
+#image2 {
+  text-align: center;
+}
+
+#image3 {
+  text-align: center;
 }
