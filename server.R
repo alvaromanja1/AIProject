@@ -150,6 +150,7 @@ shinyServer(function(input, output) {
   tomorrowDate = paste(Sys.Date()+1, "12:00:00-0400", sep="T")
   theDayAfterTomorrowDate = paste(Sys.Date()+2, "12:00:00-0400", sep="T")
   
+  
   output$location <- renderText({
     location 
   })
@@ -157,7 +158,11 @@ shinyServer(function(input, output) {
   forecast = getWeatherForecast(APIKEY, city=location)
   
   realTemp = forecast[[1]]
-  
+  # Obtenemos del dataset la hora actual para dibujar una luna en caso de que sea de noche
+  currentTime = realTemp$time;
+  # Hacemos un substring para guardar en currentTime la hora actual
+  currentTime = substr(currentTime, 12, 19)
+
   realTemp$icon = NULL
   realTemp$apparentTemperature = NULL
   realTemp$temperature = NULL
@@ -201,27 +206,27 @@ shinyServer(function(input, output) {
   })
   
   output$image1 <- renderImage({
-    if(res >=0 && res < 25){ 
+    if(res >=0 && res < 25 && currentTime < "18:30:00"){ 
       return(list(
         src = "images/sol.png",
         contentType = "image/png",
         alt = "Face"
       ))
-    }else if (res >=25 && res < 45){
+    }else if (res >=25 && res < 45 && currentTime < "18:30:00"){
       return(list(
         src = "images/solNubes.png",
         contentType = "image/png",
         alt = "Face"
       ))
       
-    }else if (res >=45 && res < 65){
+    }else if (res >=45 && res < 65 && currentTime < "18:30:00"){
       return(list(
         src = "images/nubes.png",
         contentType = "image/png",
         alt = "Face"
       ))
       
-    }else if(res >=65 && res <= 100){
+    }else if(res >=65 && res <= 100 && currentTime < "18:30:00"){
       return(list(
         src = "images/lluvia.png",
         contentType = "image/png",
@@ -231,6 +236,33 @@ shinyServer(function(input, output) {
     }else if(realTemp2$temperatureCelsius < 0){
       return(list(
         src = "images/nieve.png",
+        contentType = "image/png",
+        alt = "Face"
+      ))
+      
+    }else if(res >=0 && res < 25 && currentTime > "18:30:00"){ 
+      return(list(
+        src = "images/luna.png",
+        contentType = "image/png",
+        alt = "Face"
+      ))
+    }else if (res >=25 && res < 45 && currentTime > "18:30:00"){
+      return(list(
+        src = "images/luna_nubes.png",
+        contentType = "image/png",
+        alt = "Face"
+      ))
+      
+    }else if (res >=45 && res < 65 && currentTime > "18:30:00"){
+      return(list(
+        src = "images/noche_lluvia.png",
+        contentType = "image/png",
+        alt = "Face"
+      ))
+      
+    }else if(res >=65 && res <= 100 && currentTime > "18:30:00"){
+      return(list(
+        src = "images/noche_truenos.png",
         contentType = "image/png",
         alt = "Face"
       ))
