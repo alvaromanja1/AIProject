@@ -32,32 +32,23 @@ APIKEY = readChar(file, file.info(file)$size)
 #---------------------------------------------------------------------------
 
 #leer los csv's  
-weather = read.csv("csv/Weather Bilbao.csv",check.names=FALSE)
-#weather <- subset(weather, weather$Id <= 15361) 
-#colnames(weather)[1] <- "id2"
-#weather$id2 = NULL
-#weather$Id = NULL
-#weather$Id = NULL
-#weather$Pressure = round(weather$Pressure)
-#weather$id = seq.int(nrow(weather))
-#weather = weather[weather$id > 4621,]
-#write.csv(weather, file = "csv/Weather Bilbao.csv")
-#weather <- weather[, -25]
+weather = read.csv("csv/Weather Madrid.csv",check.names=FALSE)
+#write.csv(weather, file = "csv/Weather Madrid.csv")
 
-presionBaja = c(2,972, 1002, 1011, NA) #Aquí se ha decidido empezar por 0, ya que es el mínimo valor, luego que a partir de 1.25 empieze a dejar de ser una aplicación con rating "bajo", para que así, poco antes de la mitad deje de ser una aplicación con rating "bajo"
-presionMedia = c(4, 1009, 1014, 1018 , 1020)#Aquí empezamos por 1.75 para que haya más margen hasta el 2.5 (que sería la mitad exacta), luego a partir de 3.25 consideramos que empieza a dejar de ser una app "normal", hasta llegar a 4
-presionAlta = c(3,1018, 1026, 1037, NA)#Por último, consideramos que una app empieza a ser el rating "alto" a partir de 3.5, hasta 4.5, donde de ahí en adelante (hasta 5), se puede considerar una App con rating "alto"
-presionAny = c(4,972,972,1037,1037)
+presionBaja = c(2,980, 1005, 1012, NA) #Aquí se ha decidido empezar por 0, ya que es el mínimo valor, luego que a partir de 1.25 empieze a dejar de ser una aplicación con rating "bajo", para que así, poco antes de la mitad deje de ser una aplicación con rating "bajo"
+presionMedia = c(4, 1008, 1014, 1018 , 1021)#Aquí empezamos por 1.75 para que haya más margen hasta el 2.5 (que sería la mitad exacta), luego a partir de 3.25 consideramos que empieza a dejar de ser una app "normal", hasta llegar a 4
+presionAlta = c(3,1018, 1030, 1047, NA)#Por último, consideramos que una app empieza a ser el rating "alto" a partir de 3.5, hasta 4.5, donde de ahí en adelante (hasta 5), se puede considerar una App con rating "alto"
+presionAny = c(4,980,980,1047,1047)
 
-tempBaja = c(2, -3 , 8 , 14 , NA) #Aquí empezamos por 9, ya que es el mínimo, empezamos a reducir su pertenencia a partir de 16, y consideramos que dejan de ser "pocos" los dispositivos soportados a partur de 25
-tempMedia = c(4,10, 14, 18, 24) #Aquí empezamos a considerar como "algunos" las apps con valor de 23, hasta 35, donde empeiezan ya a ser miembros de "pleno derecho" al conjunto (se hace así ya que hay grandes saltos entre dispositivos conectados). Por último, se considera que a partir de 37, empiezan a estar menos en el medio, hasta llegar a 40 
-tempAlta = c(3,20, 27, 39, NA)
-tempAny = c(4,-3,-3,39,39)
+tempBaja = c(2, -6 , 5 , 12 , NA) #Aquí empezamos por 9, ya que es el mínimo, empezamos a reducir su pertenencia a partir de 16, y consideramos que dejan de ser "pocos" los dispositivos soportados a partur de 25
+tempMedia = c(4,10, 15, 18, 22) #Aquí empezamos a considerar como "algunos" las apps con valor de 23, hasta 35, donde empeiezan ya a ser miembros de "pleno derecho" al conjunto (se hace así ya que hay grandes saltos entre dispositivos conectados). Por último, se considera que a partir de 37, empiezan a estar menos en el medio, hasta llegar a 40 
+tempAlta = c(3,20, 26, 39, NA)
+tempAny = c(4,-6,-6,39,39)
 
-humedadBaja = c(2, 21 , 40 , 52 , NA)
-humedadMedia = c(4,47, 61, 71, 80)
-humedadAlta = c(3,77, 93, 100, NA)
-humedadAny = c(4,21,21,100,100)
+humedadBaja = c(2, 16 , 30 , 40 , NA)
+humedadMedia = c(4,35, 49, 65, 72)
+humedadAlta = c(3,70, 81, 99, NA)
+humedadAny = c(4,16,16,100,100)
 
 varinp.mf = cbind(tempBaja,tempMedia,tempAlta,tempAny,humedadBaja,humedadMedia,humedadAlta,humedadAny,presionBaja,presionMedia,presionAlta,presionAny)
 
@@ -70,7 +61,7 @@ varinput3 = c("Poca", "Algo", "Mucha","Any")
 
 names.varinput = c(varinput1, varinput2,varinput3)
 
-range.data = matrix(c( -3, 39, 21, 100, 972, 1037, 0, 100), nrow = 2)
+range.data = matrix(c( -6, 39, 16, 100, 980, 1047, 0, 100), nrow = 2)
 #Temp minima historia bilbao: -6, Max: 41
 type.defuz = "COG"
 type.tnorm = "MIN"
@@ -80,7 +71,7 @@ type.model = "MAMDANI" #Indicamos el tipo de modelo que vamos a usar
 
 name = "Probabilidad de lluvia" #Le damos nombre
 
-newdata = weather[,c("Temperature", "Humidity","Pressure")]
+newdata = weather[,c("Mean.TemperatureC", "Mean.Humidity","Mean.Sea.Level.PressurehPa")]
 
 colnames.var = c("Temperatura", "Humedad","Presion", "Resultado")
 
@@ -97,34 +88,43 @@ varout.mf = cbind(probBaja,probMedia,probAlta)
 #Humedad: -> Reducida, Intermedia, Grande
 #presion: -> Poca, Algo, Mucha
 
-rule = matrix( c("Baja", "and", "Any" , "and" , "Any","->", "Alta",
-                 "Baja", "and","Grande" , "and" , "Mucha","->", "Media",
+rule = matrix( c("Baja", "and", "Grande" , "and" , "Any","->", "Alta",
+                 
+                 "Baja", "and","Intermedia" , "and" , "Poca","->", "Alta",
+                 "Baja", "and","Intermedia" , "and" , "Algo","->", "Media",
                  "Baja", "and","Intermedia", "and"  , "Mucha","->", "Media",
-                 "Baja", "and","Reducida" , "and" , "Algo","->", "Media",
-                 "Baja", "and","Reducida", "and"  , "Mucha","->", "Media",
                  
-                 "Media", "and","Any" , "and" , "Any","->", "Media",
-                 "Media", "and","Grande" , "and" , "Mucha","->", "Baja",
-                 "Media", "and","Intermedia" , "and" , "Mucha","->", "Baja",
-                 "Media", "and","Intermedia" , "and" , "Algo","->", "Baja",
-                 "Media", "and","Reducida" , "and" , "Any","->", "Baja",
+                 "Baja", "and","Reducida" , "and" , "Any","->", "Media",
                  
+                 "Media", "and","Grande" , "and" , "Poca","->", "Alta",
+                 "Media", "and","Grande" , "and" , "Algo","->", "Alta",
+                 "Media", "and","Grande" , "and" , "Mucha","->", "Media",
                  
-                 "Alta", "and","Any", "and"  , "Any","->", "Baja",
+                 "Media", "and","Intermedia", "and"  , "Poca","->", "Alta",
+                 "Media", "and","Intermedia" , "and" , "Algo","->", "Media",
+                 "Media", "and","Intermedia" , "and" , "Mucha","->", "Media",
+                 
+                 "Media", "and","Reducida"  , "and", "Any","->", "Media",
+                 
                  "Alta", "and","Grande", "and"  , "Poca","->", "Media",
-                 "Alta", "and","Intermedia" , "and" , "Poca","->", "Media"
+                 "Alta", "and","Grande", "and"  , "Algo","->", "Media",
+                 "Alta", "and","Grande" , "and" , "Mucha","->", "Baja",
                  
+                 "Alta", "and","Intermedia" , "and" , "Poca","->", "Media",
+                 "Alta", "and","Intermedia" , "and" , "Algo","->", "Baja",
+                 "Alta", "and","Intermedia" , "and" , "Mucha","->", "Baja",
                  
-               
-), nrow = 13, byrow = TRUE)
+                 "Alta", "and","Reducida" , "and" , "Any","->", "Baja"
+                 
+), nrow = 19, byrow = TRUE)
 
 sistema = frbs.gen(range.data, num.fvalinput, names.varinput,
                    num.fvaloutput, varout.mf, varoutput1, rule,
                    varinp.mf, type.model, type.defuz, type.tnorm,
                    type.snorm, func.tsk = NULL, colnames.var, type.implication.func, name)
 
-windows()
-plotMF(sistema)#También, por simple hecho didáctico, mostramos cómo quedan nuestros conjuntos de entrada y el de salida
+#windows()
+#plotMF(sistema)#También, por simple hecho didáctico, mostramos cómo quedan nuestros conjuntos de entrada y el de salida
 
 res = predict(sistema, newdata)$predicted.val 
 
@@ -134,14 +134,40 @@ newdata$id = seq.int(nrow(weather))
 
 result = merge(weather, newdata, by.x = 'Id', by.y = 'id')
 
-result = result[,c(1,2,3,4,5,6,12)]
+result = result[,c(1,2,3,4,5,6,7,8,12)]
 
+accuracy = function(result){
+  right = 0
+  rain = 0
+  event = ""
+  prob = 0
+  for(i in 1:nrow(result)){
+    rain = result[i,7]
+    event = result[i,8]
+    prob = result[i,9]
+    if(rain > 0 || event != ""){
+      if(prob >= 50){ 
+        right = right + 1
+      }
+      
+    }else{
+      if(prob < 50){ 
+        right = right + 1
+      }
+     
+    }
+  }
+  precision = (right / nrow(result) ) *100
+  return(precision)
+}
 
+test = accuracy(result)
+test
 #Servidor de shiny mediante el cual pasaremos la info a ui.r y lo visualizamos
 #A partir de aquí, lo de la predicción actual
 shinyServer(function(input, output) {
   names(unlist(APIKEY))
-  location = 'Bilbao'
+  location = 'Madrid'
   
   #Coordenadas para saber el tiempo en bilbao
   long = -2.934991
@@ -162,7 +188,7 @@ shinyServer(function(input, output) {
   currentTime = realTemp$time;
   # Hacemos un substring para guardar en currentTime la hora actual
   currentTime = substr(currentTime, 12, 19)
-
+  
   realTemp$icon = NULL
   realTemp$apparentTemperature = NULL
   realTemp$temperature = NULL
@@ -206,61 +232,61 @@ shinyServer(function(input, output) {
   })
   
   output$image1 <- renderImage({
-    if(res >=0 && res < 25 && currentTime < "18:30:00"){ 
+    if(res >=0 && res < 35 && currentTime < "18:00:00"){ 
       return(list(
         src = "images/sol.png",
         contentType = "image/png",
         alt = "Face"
       ))
-    }else if (res >=25 && res < 45 && currentTime < "18:30:00"){
+    }else if (res >=35 && res <= 45 && currentTime < "18:00:00"){
       return(list(
         src = "images/solNubes.png",
         contentType = "image/png",
         alt = "Face"
       ))
       
-    }else if (res >=45 && res < 65 && currentTime < "18:30:00"){
+    }else if (res >45 && res < 65 && currentTime < "18:00:00"){
       return(list(
         src = "images/nubes.png",
         contentType = "image/png",
         alt = "Face"
       ))
       
-    }else if(res >=65 && res <= 100 && currentTime < "18:30:00"){
+    }else if(res >=65 && res <= 100 && currentTime < "18:00:00"){
       return(list(
         src = "images/lluvia.png",
         contentType = "image/png",
         alt = "Face"
       ))
       
-    }else if(realTemp2$temperatureCelsius < 0){
+    }else if(realTemp2$temperatureCelsius < -2){
       return(list(
         src = "images/nieve.png",
         contentType = "image/png",
         alt = "Face"
       ))
       
-    }else if(res >=0 && res < 25 && currentTime > "18:30:00"){ 
+    }else if(res >=0 && res < 35 && currentTime > "18:00:00"){ 
       return(list(
         src = "images/luna.png",
         contentType = "image/png",
         alt = "Face"
       ))
-    }else if (res >=25 && res < 45 && currentTime > "18:30:00"){
+    }else if (res >=35 && res <= 45 && currentTime > "18:00:00"){
       return(list(
         src = "images/luna_nubes.png",
         contentType = "image/png",
         alt = "Face"
       ))
       
-    }else if (res >=45 && res < 65 && currentTime > "18:30:00"){
+    }else if (res > 45 && res < 65 && currentTime > "18:00:00"){
       return(list(
         src = "images/noche_lluvia.png",
         contentType = "image/png",
         alt = "Face"
       ))
       
-    }else if(res >=65 && res <= 100 && currentTime > "18:30:00"){
+    }else if(res >=65 && res <= 100 && currentTime > "18:00:00"){
       return(list(
         src = "images/noche_truenos.png",
         contentType = "image/png",
@@ -289,13 +315,13 @@ shinyServer(function(input, output) {
   tomorrowTemp = tomorrowTemp[,c("temperature", "humidity","pressure")]
   
   Tomorrowres = predict(sistema, tomorrowTemp)$predicted.val 
-
+  
   Tomorrowres = round(Tomorrowres,digits=0)
   tomorrowTemp$humidity = round(tomorrowTemp$humidity,digits=0)
   tomorrowTemp$temperature = round(tomorrowTemp$temperature,digits=0)
   
   #Indicamos los textos que queremos volcar a la interfaz
-
+  
   Tomorrowprobability = paste("Precipitations:",Tomorrowres, sep=" ")
   Tomorrowprobability = paste(Tomorrowprobability,"%", sep="")
   
@@ -322,20 +348,20 @@ shinyServer(function(input, output) {
   tomorrowTemp$probabilidad = Tomorrowres
   
   output$image2 <- renderImage({
-    if(Tomorrowres >=0 && Tomorrowres < 25){ 
+    if(Tomorrowres >=0 && Tomorrowres < 35){ 
       return(list(
         src = "images/sol.png",
         contentType = "image/png",
         alt = "Face"
       ))
-    }else if (Tomorrowres >=25 && Tomorrowres < 45){
+    }else if (Tomorrowres >=35 && Tomorrowres <= 45){
       return(list(
         src = "images/solNubes.png",
         contentType = "image/png",
         alt = "Face"
       ))
       
-    }else if (Tomorrowres >=45 && Tomorrowres < 65){
+    }else if (Tomorrowres > 45 && Tomorrowres < 65){
       return(list(
         src = "images/nubes.png",
         contentType = "image/png",
@@ -349,7 +375,7 @@ shinyServer(function(input, output) {
         alt = "Face"
       ))
       
-    }else if(tomorrowTemp$temperature < 0){
+    }else if(tomorrowTemp$temperature < -2){
       return(list(
         src = "images/nieve.png",
         contentType = "image/png",
@@ -412,20 +438,20 @@ shinyServer(function(input, output) {
   day3Temp$probabilidad = day3res
   
   output$image3 <- renderImage({
-    if(day3res >=0 && day3res < 25){ 
+    if(day3res >=0 && day3res < 35){ 
       return(list(
         src = "images/sol.png",
         contentType = "image/png",
         alt = "Face"
       ))
-    }else if (day3res >=25 && day3res < 45){
+    }else if (day3res >=35 && day3res <= 45){
       return(list(
         src = "images/solNubes.png",
         contentType = "image/png",
         alt = "Face"
       ))
       
-    }else if (day3res >=45 && day3res < 65){
+    }else if (day3res > 45 && day3res < 65){
       return(list(
         src = "images/nubes.png",
         contentType = "image/png",

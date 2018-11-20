@@ -70,4 +70,35 @@
                  "Alta", "and","Reducida" , "and" , "Poca","->", "Baja",
                  "Alta", "and","Reducida" , "and" , "Algo","->", "Baja",
                  "Alta", "and","Reducida", "and"  , "Mucha","->", "Baja"
+
+-------------------------------------Reglas Madrid 78,4%--------------------------------------------------------------------------
+"Baja", "and", "Grande" , "and" , "Any","->", "Alta",
+                 
+                 "Baja", "and","Intermedia" , "and" , "Poca","->", "Alta",
+                 "Baja", "and","Intermedia" , "and" , "Algo","->", "Media",
+                 "Baja", "and","Intermedia", "and"  , "Mucha","->", "Media",
+                 
+                 "Baja", "and","Reducida" , "and" , "Any","->", "Media",
+                 
+                 "Media", "and","Grande" , "and" , "Poca","->", "Alta",
+                 "Media", "and","Grande" , "and" , "Algo","->", "Alta",
+                 "Media", "and","Grande" , "and" , "Mucha","->", "Media",
+                 
+                 "Media", "and","Intermedia", "and"  , "Poca","->", "Alta",
+                 "Media", "and","Intermedia" , "and" , "Algo","->", "Media",
+                 "Media", "and","Intermedia" , "and" , "Mucha","->", "Media",
+                 
+                 "Media", "and","Reducida"  , "and", "Poca","->", "Media",
+                 "Media", "and","Reducida" , "and" , "Algo","->", "Media",
+                 "Media", "and","Reducida" , "and" , "Mucha","->", "Baja",
+                 
+                 "Alta", "and","Grande", "and"  , "Poca","->", "Media",
+                 "Alta", "and","Grande", "and"  , "Algo","->", "Media",
+                 "Alta", "and","Grande" , "and" , "Mucha","->", "Baja",
+                 
+                 "Alta", "and","Intermedia" , "and" , "Poca","->", "Media",
+                 "Alta", "and","Intermedia" , "and" , "Algo","->", "Baja",
+                 "Alta", "and","Intermedia" , "and" , "Mucha","->", "Baja",
+                 
+                 "Alta", "and","Reducida" , "and" , "Any","->", "Baja"
                
