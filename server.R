@@ -45,9 +45,9 @@ tempMedia = c(4,10, 15, 18, 22) #Aquí empezamos a considerar como "algunos" las
 tempAlta = c(3,20, 26, 39, NA)
 tempAny = c(4,-6,-6,39,39)
 
-humedadBaja = c(2, 16 , 30 , 40 , NA)
-humedadMedia = c(4,35, 49, 65, 72)
-humedadAlta = c(3,70, 81, 99, NA)
+humedadBaja = c(2, 16 , 35 , 45 , NA)
+humedadMedia = c(4,35, 54, 70, 78)
+humedadAlta = c(3,75, 88, 100, NA)
 humedadAny = c(4,16,16,100,100)
 
 varinp.mf = cbind(tempBaja,tempMedia,tempAlta,tempAny,humedadBaja,humedadMedia,humedadAlta,humedadAny,presionBaja,presionMedia,presionAlta,presionAny)
@@ -136,6 +136,7 @@ result = merge(weather, newdata, by.x = 'Id', by.y = 'id')
 
 result = result[,c(1,2,3,4,5,6,7,8,12)]
 
+# Obtenemos el portentaje de acierto 
 accuracy = function(result){
   right = 0
   rain = 0
@@ -170,8 +171,8 @@ shinyServer(function(input, output) {
   location = 'Madrid'
   
   #Coordenadas para saber el tiempo en bilbao
-  long = -2.934991
-  lat = 43.263005 
+  long = -3.6827461
+  lat = 40.4893538 
   #establecemos las fechas de mañana y pasado para realizar las predicciones
   tomorrowDate = paste(Sys.Date()+1, "12:00:00-0400", sep="T")
   theDayAfterTomorrowDate = paste(Sys.Date()+2, "12:00:00-0400", sep="T")
