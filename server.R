@@ -248,6 +248,19 @@ shinyServer(function(input, output) {
   }
   
   rulesToday = rule(temp,humidity,pressure)
+  tipoTempUI = paste("Temperatura:",rulesToday[1], sep=" ")
+  tipoHumUI = paste("Humedad:", rulesToday[2], sep=" ")
+  tipoPressUI = paste("Presión:", rulesToday[3], sep=" ")
+  
+  output$tipoTemp <- renderText({
+    tipoTempUI
+  })
+  output$tipoHum <- renderText({
+    tipoHumUI
+  })
+  output$tipoPress <- renderText({
+    tipoPressUI
+  })
   
   res = predict(sistema, realTemp2)$predicted.val 
   # Redondeamos el resultado de la prediccion, temperatura y humedad
@@ -366,6 +379,20 @@ shinyServer(function(input, output) {
   
   rulesTomorrow = rule(tomorrowTemperature,tomorrowHumidity,tomorrowPressure)
   
+  tipoTempTomorUI = paste("Temperatura:", rulesTomorrow[1], sep=" ")
+  tipoHumTomorUI = paste("Humedad:", rulesTomorrow[2], sep=" ")
+  tipoPressTomorUI = paste("Presión:", rulesTomorrow[3], sep=" ")
+  
+  output$tipoTempTomor <- renderText({
+    tipoTempTomorUI
+  })
+  output$tipoHumTomor <- renderText({
+    tipoHumTomorUI
+  })
+  output$tipoPressTomor <- renderText({
+    tipoPressTomorUI
+  })
+  
   Tomorrowres = predict(sistema, tomorrowTemp)$predicted.val 
   
   Tomorrowres = round(Tomorrowres,digits=0)
@@ -461,6 +488,20 @@ shinyServer(function(input, output) {
   day3pressure = day3Temp$pressure
   
   rules3Days = rule(day3Temperature,day3Humidity,day3pressure)
+  
+  tipoTemp3DayUI = paste("Temperatura:", rules3Days[1], sep=" ")
+  tipoHum3DayUI = paste("Humedad:", rules3Days[2], sep=" ")
+  tipoPress3DayUI = paste("Presión:", rules3Days[3], sep=" ")
+  
+  output$tipoTemp3Day <- renderText({
+    tipoTemp3DayUI
+  })
+  output$tipoHum3Day <- renderText({
+    tipoHum3DayUI
+  })
+  output$tipoPress3Day <- renderText({
+    tipoPress3DayUI
+  })
   
   day3res = predict(sistema, day3Temp)$predicted.val 
   
