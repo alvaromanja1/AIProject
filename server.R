@@ -76,8 +76,8 @@ newdata = weather[,c("Mean.TemperatureC", "Mean.Humidity","Mean.Sea.Level.Pressu
 colnames.var = c("Temperatura", "Humedad","Presion", "Resultado")
 
 probBaja = c(2,0, 20, 40, NA)#Consideramos que una app es "mala" si tiene entre 0 y 20 puntos, a partir de la cual pensamos que deja de ser tam mala, hasta llegar a la valoración de 40
-probMedia = c(4,30, 45, 55, 70) #Consideramos que una app empieza a ser "regular" a partir de los 30 puntos, hasta llegar a los 45 puntos; y empieza a dejar de ser "regular" a partir de los 55, hasta llegar a los 70 puntos
-probAlta = c(3,65, 85, 100, NA)
+probMedia = c(4,30, 40, 50, 65) #Consideramos que una app empieza a ser "regular" a partir de los 30 puntos, hasta llegar a los 45 puntos; y empieza a dejar de ser "regular" a partir de los 55, hasta llegar a los 70 puntos
+probAlta = c(3,60, 85, 100, NA)
 
 num.fvaloutput = matrix(c(3), nrow = 1)
 
@@ -155,15 +155,15 @@ accuracy = function(result){
       if(prob < 50){ 
         right = right + 1
       }
-     
+      
     }
   }
-  precision = (right / nrow(result) ) *100
+  precision = (right / nrow(result) ) * 100
   return(precision)
 }
 
-test = accuracy(result)
-test
+accuracyOfPrediction = accuracy(result)
+accuracyOfPrediction
 #Servidor de shiny mediante el cual pasaremos la info a ui.r y lo visualizamos
 #A partir de aquí, lo de la predicción actual
 shinyServer(function(input, output) {
@@ -205,6 +205,49 @@ shinyServer(function(input, output) {
   realTemp2 = realTemp[,c("temperatureCelsius","humidity","pressure")]
   
   realTemp2$humidity = realTemp$humidity * 100
+  
+  temp = realTemp$temperatureCelsius
+  
+  humidity = realTemp$humidity * 100
+  
+  pressure = realTemp$pressure
+  
+  rule = function(temp, humidity, pressure){
+    presRange = c(980,1010,1020,1047)
+    positionPres = min(which(presRange >= pressure))
+    vector <- vector(mode="character", length = 3)
+    if(positionPres == 2){
+      vector[3] = "Poca"
+    }else if(positionPres == 3){
+      vector[3] = "Algo"
+    }else{
+      vector[3] = "Mucha"
+    }
+    
+    tempRange = c(-6,11,21,39)
+    positiontemp = min(which(tempRange >= temp))
+    if(positiontemp == 2){
+      vector[1] = "Baja"
+    }else if(positiontemp == 3){
+      vector[1] = "Media"
+    }else{
+      vector[1] = "Alta"
+    }
+    
+    humRange = c(16,40,77,100)
+    positionHum = min(which(humRange >= humidity))
+    if(positionHum == 2){
+      vector[2] = "Reducida"
+    }else if(positionHum == 3){
+      vector[2] = "Intermedia"
+    }else{
+      vector[2] = "Grande"
+    }
+    
+    return(vector)
+  }
+  
+  rulesToday = rule(temp,humidity,pressure)
   
   res = predict(sistema, realTemp2)$predicted.val 
   # Redondeamos el resultado de la prediccion, temperatura y humedad
@@ -315,6 +358,14 @@ shinyServer(function(input, output) {
   
   tomorrowTemp = tomorrowTemp[,c("temperature", "humidity","pressure")]
   
+  tomorrowTemperature = tomorrowTemp$temperature
+  
+  tomorrowHumidity = tomorrowTemp$humidity
+  
+  tomorrowPressure = tomorrowTemp$pressure
+  
+  rulesTomorrow = rule(tomorrowTemperature,tomorrowHumidity,tomorrowPressure)
+  
   Tomorrowres = predict(sistema, tomorrowTemp)$predicted.val 
   
   Tomorrowres = round(Tomorrowres,digits=0)
@@ -402,6 +453,14 @@ shinyServer(function(input, output) {
   day3Temp$temperature = (day3Temp$temperatureMin + day3Temp$temperatureMax) / 2
   
   day3Temp = day3Temp[,c("temperature", "humidity","pressure")]
+  
+  day3Temperature = day3Temp$temperature
+  
+  day3Humidity = day3Temp$humidity
+  
+  day3pressure = day3Temp$pressure
+  
+  rules3Days = rule(day3Temperature,day3Humidity,day3pressure)
   
   day3res = predict(sistema, day3Temp)$predicted.val 
   
