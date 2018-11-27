@@ -272,6 +272,7 @@ shinyServer(function(input, output) {
   tipoTempUI = paste("Temperatura:",rulesToday[1], sep=" ")
   tipoHumUI = paste("Humedad:", rulesToday[2], sep=" ")
   tipoPressUI = paste("Presión:", rulesToday[3], sep=" ")
+  tipoResultUI = paste("Resultado probabilidad:", rulesToday[4], sep=" ")
   
   output$tipoTemp <- renderText({
     tipoTempUI
@@ -281,6 +282,9 @@ shinyServer(function(input, output) {
   })
   output$tipoPress <- renderText({
     tipoPressUI
+  })
+  output$tipoResult <- renderText({
+    tipoResultUI
   })
   
   # Redondeamos el resultado de la prediccion, temperatura y humedad
@@ -404,6 +408,7 @@ shinyServer(function(input, output) {
   tipoTempTomorUI = paste("Temperatura:", rulesTomorrow[1], sep=" ")
   tipoHumTomorUI = paste("Humedad:", rulesTomorrow[2], sep=" ")
   tipoPressTomorUI = paste("Presión:", rulesTomorrow[3], sep=" ")
+  tipoResulTomortUI = paste("Resultado probabilidad:", rulesTomorrow[4], sep=" ")
   
   output$tipoTempTomor <- renderText({
     tipoTempTomorUI
@@ -413,6 +418,9 @@ shinyServer(function(input, output) {
   })
   output$tipoPressTomor <- renderText({
     tipoPressTomorUI
+  })
+  output$tipoResultTomor <- renderText({
+    tipoResulTomortUI
   })
   
   
@@ -515,6 +523,7 @@ shinyServer(function(input, output) {
   tipoTemp3DayUI = paste("Temperatura:", rules3Days[1], sep=" ")
   tipoHum3DayUI = paste("Humedad:", rules3Days[2], sep=" ")
   tipoPress3DayUI = paste("Presión:", rules3Days[3], sep=" ")
+  tipoResul3DayUI = paste("Resultado probabilidad:", rules3Days[4], sep=" ")
   
   output$tipoTemp3Day <- renderText({
     tipoTemp3DayUI
@@ -524,6 +533,9 @@ shinyServer(function(input, output) {
   })
   output$tipoPress3Day <- renderText({
     tipoPress3DayUI
+  })
+  output$tipoResult3Day <- renderText({
+    tipoResul3DayUI
   })
   
   #DayAfterTomorrowprobabilityText = paste(day3res, "% probability of precipitations.", sep=" ")

@@ -52,6 +52,7 @@ body <- dashboardBody(
             h5(textOutput("tipoPress")),
             h5(textOutput("tipoTemp")),
             h5(textOutput("tipoHum")),
+            h5(textOutput("tipoResult")),
             imageOutput("image1"),
             #Día 2
             h2("Tomorrow's forecast"),
@@ -63,6 +64,7 @@ body <- dashboardBody(
             h5(textOutput("tipoPressTomor")),
             h5(textOutput("tipoTempTomor")),
             h5(textOutput("tipoHumTomor")),
+            h5(textOutput("tipoResultTomor")),
             imageOutput("image2"),
             #Día 3
             h2("The day after tomorrow forecast"),
@@ -74,6 +76,7 @@ body <- dashboardBody(
             h5(textOutput("tipoPress3Day")),
             h5(textOutput("tipoTemp3Day")),
             h5(textOutput("tipoHum3Day")),
+            h5(textOutput("tipoResult3Day")),
             imageOutput("image3")
             #)
             #))
