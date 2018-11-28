@@ -159,11 +159,11 @@ accuracy = function(result){
     }
   }
   precision = (right / nrow(result) ) * 100
-  return(precision)
+  return(round(precision,2))
 }
 
-accuracyOfPrediction = accuracy(result)
-accuracyOfPrediction
+accuracyOfPrediction = paste("Accuracy:", accuracy(result), sep=" ")
+accuracyOfPrediction2 = paste(accuracyOfPrediction,"%", sep=" ")
 #Servidor de shiny mediante el cual pasaremos la info a ui.r y lo visualizamos
 #A partir de aquí, lo de la predicción actual
 shinyServer(function(input, output) {
@@ -180,6 +180,10 @@ shinyServer(function(input, output) {
   
   output$location <- renderText({
     location 
+  })
+  
+  output$accuracy <- renderText({
+    accuracyOfPrediction2 
   })
   
   forecast = getWeatherForecast(APIKEY, city=location)
@@ -204,18 +208,16 @@ shinyServer(function(input, output) {
   
   realTemp2 = realTemp[,c("temperatureCelsius","humidity","pressure")]
   
-  realTemp2$humidity = realTemp$humidity * 100
+  realTemp2$humidity = realTemp$humidity  * 100
   
-  temp = realTemp$temperatureCelsius
+  temp = realTemp2$temperatureCelsius
   
-  humidity = realTemp$humidity * 100
+  humidity = realTemp2$humidity 
   
-  pressure = realTemp$pressure
+  pressure = realTemp2$pressure
   
   res = predict(sistema, realTemp2)$predicted.val 
-  
   rule = function(temp, humidity, pressure, prob){
-    
     presRange = c(980,1010,1020,1047)
     positionPres = min(which(presRange >= pressure))
     vector <- vector(mode="character", length = 3)
@@ -269,6 +271,7 @@ shinyServer(function(input, output) {
   }
   
   rulesToday = rule(temp,humidity,pressure, res[1])
+  rulesToday
   tipoTempUI = paste("Temperatura:",rulesToday[1], sep=" ")
   tipoHumUI = paste("Humedad:", rulesToday[2], sep=" ")
   tipoPressUI = paste("Presión:", rulesToday[3], sep=" ")

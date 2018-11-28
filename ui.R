@@ -43,6 +43,7 @@ body <- dashboardBody(
   tabItems(
     tabItem(tabName = "today",
             h1(textOutput("location")),
+            h5(textOutput("accuracy")),
             h2("Current forecast"),
             h5(textOutput("res")),
             h5(textOutput("currentTemp")),
